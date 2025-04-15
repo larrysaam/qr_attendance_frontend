@@ -1,0 +1,4 @@
+[
+    { "name": "John Doe", "checkin": "08:00 AM", "checkout": "03:00 PM" },
+    { "name": "Jane Smith", "checkin": "08:15 AM", "checkout": "03:10 PM" }
+]

@@ -1,0 +1,28 @@
+.Signin{
+    width: 120px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #61dafb;
+    color: black;
+    border: none;
+
+}
+
+.Signin:hover{
+    background-color: #282c34;
+    color: white;
+}
+
+.Signout{
+    width: 120px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: rgb(255, 107, 107);
+    color: white;
+    border: none;
+}
+
+.Signout:hover{
+    background-color: #282c34;
+    color: white;
+}

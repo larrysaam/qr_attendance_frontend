@@ -1,0 +1,35 @@
+.scan_area{
+    width: 100%;
+    height: auto;
+}
+
+.scan_area h2{
+    font-size: 20px;
+    color: black;
+    text-align: center;
+    padding: 20px;
+}
+
+.scan_area_box{
+    width: 100%;
+    height: 40%;
+    display: list-item;
+    list-style: none;
+}
+
+.scan_area_box_inner{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.buttons_container{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
