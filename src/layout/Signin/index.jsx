@@ -107,21 +107,6 @@ export const ScanArea = ({option, setOption, classList, attendance, setAttendanc
     }, [option]);
 
    
-    //sign in user
-    const Signin = () => {
-        // 1. set sign in option
-        setOption('signin');
-        // 2. open scanner
-        scanner.render(success, error);
-    }
-
-    //sign out user
-    const Signout = () => {
-        // 1. set sign out option
-        setOption('signout');
-        // 2. open scanner
-        scanner.render(success, error);
-    }
 
     const ShowPopup = ()=>{
         setVisibility(true)

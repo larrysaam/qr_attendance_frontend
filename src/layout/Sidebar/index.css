@@ -41,3 +41,27 @@
     background-color: #4CAF50;
     color: #ffffff;
 }
+
+
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Full width for mobile */
+        height: auto; /* Adjust height to fit content */
+        position: fixed; /* Fix the sidebar to the bottom */
+        bottom: 0; /* Align to the bottom of the page */
+        flex-direction: row; /* Arrange items in a row */
+        justify-content: space-around; /* Space items evenly */
+        padding: 10px 0; /* Adjust padding for mobile */
+    }
+
+    .logo-container {
+        display: none; /* Hide the logo on mobile for more space */
+    }
+
+    .attendance-button {
+        padding: 8px 12px; /* Adjust button size for mobile */
+        font-size: 14px; /* Adjust font size for mobile */
+    }
+}

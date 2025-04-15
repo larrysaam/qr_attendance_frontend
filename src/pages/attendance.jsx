@@ -60,6 +60,7 @@ export const Page = () => {
     return (
         <div style={{ display: 'flex' }} className="page_attendance">
             <Sidebar />
+            
             <div className='content_area'>
                 <h1>Attendance</h1>
                 <div className='inner_content_area'>
