@@ -5,21 +5,19 @@ import Table from '../components/table'
 import Sidebar from '../layout/Sidebar'
 import { Popup } from '../layout/popup/popup'
 import axios from 'axios'
+import { Backend_URL } from '../utils/api'
 
 export const Page = () => {
 
     const [option, setOption] = useState(null)
     const [visibility, setVisibility] = useState(false)
-    const [attendance, setAttendance] = useState([
-        { "name": "John Doe", "checkin": "08:00 AM", "checkout": "03:00 PM" },
-        { "name": "Jane Smith", "checkin": "08:15 AM", "checkout": "03:10 PM" }
-    ]);
+    const [attendance, setAttendance] = useState([]);
     const [classList, setClassList] = useState([]);
 
 
+    // Fetch classlist data from the backend
     useEffect(() => {
-        // Fetch classlist data from the backend
-        axios.get('http://localhost:5000/attendance/classlist') // Replace with your backend URL
+        axios.get(`${Backend_URL}/attendance/classlist`) // Replace with your backend URL
             .then(response => {
                 setClassList(response.data); // Store the retrieved data in classList state
             })
@@ -31,7 +29,7 @@ export const Page = () => {
 
     useEffect(() => {
         // Fetch attendance data from the backend
-        axios.get('http://localhost:5000/attendance/v1') // Replace with your backend URL
+        axios.get(`${Backend_URL}/attendance/v1`) // Replace with your backend URL
             .then(response => {
                 setAttendance(response.data); // Store the retrieved data in attendance state
             })
@@ -55,6 +53,9 @@ export const Page = () => {
         setOption(null)
         setVisibility(false)
     }
+
+
+    
 
     return (
         <div style={{ display: 'flex' }} className="page_attendance">

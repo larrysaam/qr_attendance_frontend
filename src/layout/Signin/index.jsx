@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import './index.css'
 import axios from "axios";
 import { Popup } from "../popup/popup";
+import { Backend_URL } from "../../utils/api";
 
 export const ScanArea = ({option, setOption, classList, attendance, setAttendance, setVisibility}) => {
 
@@ -40,7 +41,7 @@ export const ScanArea = ({option, setOption, classList, attendance, setAttendanc
                 );
     
                 // Send a PUT request to update the server
-                axios.put(`http://localhost:5000/attendance/v1/${option}`, {
+                axios.put(`${Backend_URL}/attendance/v1/${option}`, {
                     studentname: results,
                     [option]: currentTime,
                 })
@@ -61,7 +62,7 @@ export const ScanArea = ({option, setOption, classList, attendance, setAttendanc
                 setAttendance(prevAttendance => [...prevAttendance, newEntry]);
     
                 // Send a POST request to add the new entry to the server
-                axios.post('http://localhost:5000/attendance/v1', {
+                axios.post(`${Backend_URL}/attendance/v1`, {
                     studentname: student.name,
                     checkin: option === 'checkin' ? currentTime : 'N/A',
                     checkout: option === 'checkout' ? currentTime : 'N/A',
