@@ -1,126 +1,145 @@
-import { Popupbtn, Signinbutton, Signoutbutton } from "../../components/buttons"
-import { Screen } from "../../components/screen"
+import { Popupbtn, Signinbutton, Signoutbutton } from "../../components/buttons";
+import { Screen } from "../../components/screen";
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useEffect, useState } from 'react';
-import './index.css'
+import './index.css';
 import axios from "axios";
-import { Popup } from "../popup/popup";
+import { InvalidCardPopup, Popup } from "../popup/popup";
 import { Backend_URL } from "../../utils/api";
 
-export const ScanArea = ({option, setOption, classList, attendance, setAttendance, setVisibility}) => {
-
+export const ScanArea = ({ option, setOption, classList, attendance, setAttendance, setVisibility, setCardvalidity }) => {
     var scanner = null; // Declare scanner variable outside useEffect to avoid reinitialization
     const [scanResults, setScanResults] = useState([]);
-   
 
-    function success(results) {
+    // Helper function: Validate QR code format
+    const validateQRCode = (results) => {
+        if (results.startsWith('@')) {
+            return results.slice(1); // Extract the name after '@'
+        }
+        return null;
+    };
+
+    // Helper function: Handle valid student
+    const handleValidStudent = (student, name) => {
+        const currentTime = new Date().toLocaleTimeString();
+
+        const attendie = attendance.find(entry => entry.name === name);
+
+        if (attendie) {
+            updateAttendanceLocally(name, currentTime);
+            updateAttendanceOnServer(name, currentTime);
+        } else {
+            addNewAttendanceLocally(student, currentTime);
+            addNewAttendanceOnServer(student, currentTime);
+        }
+
+        setCardvalidity(true);
+    };
+
+    // Helper function: Update attendance locally
+    const updateAttendanceLocally = (name, currentTime) => {
+        setAttendance(prevAttendance =>
+            prevAttendance.map(entry =>
+                entry.name === name
+                    ? { ...entry, [option]: currentTime }
+                    : entry
+            )
+        );
+    };
+
+    // Helper function: Update attendance on the server
+    const updateAttendanceOnServer = (name, currentTime) => {
+        axios.put(`${Backend_URL}/attendance/v1/${option}`, {
+            studentname: name,
+            [option]: currentTime,
+        })
+        .then(() => {
+            alert(`${name} has been ${option} at ${currentTime}`);
+        })
+        .catch(error => {
+            console.error('Error updating attendance on the server:', error);
+            alert('Failed to update the server. Please try again.');
+        });
+    };
+
+    // Helper function: Add new attendance locally
+    const addNewAttendanceLocally = (student, currentTime) => {
+        const newEntry = {
+            name: student.name,
+            [option]: currentTime,
+        };
+        setAttendance(prevAttendance => [...prevAttendance, newEntry]);
+    };
+
+    // Helper function: Add new attendance on the server
+    const addNewAttendanceOnServer = (student, currentTime) => {
+        axios.post(`${Backend_URL}/attendance/v1`, {
+            studentname: student.name,
+            checkin: option === 'checkin' ? currentTime : 'N/A',
+            checkout: option === 'checkout' ? currentTime : 'N/A',
+        })
+        .then(() => {
+            alert(`${student.name} has been ${option} at ${currentTime}`);
+        })
+        .catch(error => {
+            console.error('Error adding attendance to the server:', error);
+            alert('Failed to update the server. Please try again.');
+        });
+    };
+
+    // Main success function
+    const success = (results) => {
         scanner.clear(); // Clear the scanner
-        alert(results); // Display the scanned result
-    
-        // Check if the scanned name exists in classList.json
-        const student = classList.find(student => student.name === results);
-    
-        if (student) {
-            // Get the current time
-            const currentTime = new Date().toLocaleTimeString();
-    
-            // Check if the scanned name exists already in attendance list
-            const attendie = attendance.find(student => student.name === results);
-    
-            if (attendie) {
-                // Update the existing student's check-in or check-out time locally
-                setAttendance(prevAttendance =>
-                    prevAttendance.map(entry =>
-                        entry.name === results
-                            ? {
-                                  ...entry,
-                                  [option]: currentTime,
-                              }
-                            : entry
-                    )
-                );
-    
-                // Send a PUT request to update the server
-                axios.put(`${Backend_URL}/attendance/v1/${option}`, {
-                    studentname: results,
-                    [option]: currentTime,
-                })
-                .then(() => {
-                    alert(`${student.name} has been ${option} at ${currentTime}`);
-                })
-                .catch(error => {
-                    console.error('Error updating attendance on the server:', error);
-                    alert('Failed to update the server. Please try again.');
-                });
+
+        const name = validateQRCode(results);
+
+        if (name) {
+            const student = classList.find(student => student.name === name);
+
+            if (student) {
+                handleValidStudent(student, name);
             } else {
-                // Add a new entry for the student locally
-                const newEntry = {
-                    name: student.name,
-                    [option]: currentTime,
-                };
-    
-                setAttendance(prevAttendance => [...prevAttendance, newEntry]);
-    
-                // Send a POST request to add the new entry to the server
-                axios.post(`${Backend_URL}/attendance/v1`, {
-                    studentname: student.name,
-                    checkin: option === 'checkin' ? currentTime : 'N/A',
-                    checkout: option === 'checkout' ? currentTime : 'N/A',
-                })
-                .then(() => {
-                    alert(`${student.name} has been ${option} at ${currentTime}`);
-                })
-                .catch(error => {
-                    console.error('Error adding attendance to the server:', error);
-                    alert('Failed to update the server. Please try again.');
-                });
+                alert('Name not found in class list.');
+                setCardvalidity(false);
             }
         } else {
-            alert('Name not found in class list.');
+            // Show the invalid popup box
+            setCardvalidity(false);
         }
-    
+
         // Reopen the scanner
         scanner.render(success, error);
-    }
+    };
 
-
-    // error reading QR
-    function error(err) {
+    // Error reading QR
+    const error = (err) => {
         console.warn(err);
-    }
-
+    };
 
     // Initialize the scanner
     useEffect(() => {
-
-        if(option === null) return 
+        if (option === null) return;
         scanner = new Html5QrcodeScanner('reader', {
             qrbox: {
                 width: 300,
-                height: 200
+                height: 200,
             },
             fps: 5,
         });
-    
-        scanner.render(success, error);
 
+        scanner.render(success, error);
     }, [option]);
 
-   
+    const ShowPopup = () => {
+        setVisibility(true);
+    };
 
-    const ShowPopup = ()=>{
-        setVisibility(true)
-    }
-
-    return(
+    return (
         <div className="scan_area">
             <h2>Scan QR Here!</h2>
             <div className="scan_area_box">
                 <div className="scan_area_box_inner">
-                    {
-                        option === null? '' : <Screen/>
-                    }
-                    
+                    {option === null ? '' : <Screen />}
                 </div>
                 <div className="buttons_container">
                     <Popupbtn action={ShowPopup} />
@@ -128,4 +147,4 @@ export const ScanArea = ({option, setOption, classList, attendance, setAttendanc
             </div>
         </div>
     );
-}
+};

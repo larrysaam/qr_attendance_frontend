@@ -3,7 +3,7 @@ import { ScanArea } from '../layout/Signin'
 import { useEffect, useState } from 'react'
 import Table from '../components/table'
 import Sidebar from '../layout/Sidebar'
-import { Popup } from '../layout/popup/popup'
+import { InvalidCardPopup, Popup, SuccessPopup } from '../layout/popup/popup'
 import axios from 'axios'
 import { Backend_URL } from '../utils/api'
 
@@ -11,6 +11,7 @@ export const Page = () => {
 
     const [option, setOption] = useState(null)
     const [visibility, setVisibility] = useState(false)
+    const [cardValidity, setCardvalidity] = useState(null)
     const [attendance, setAttendance] = useState([]);
     const [classList, setClassList] = useState([]);
 
@@ -38,6 +39,7 @@ export const Page = () => {
             });
     }, []);
 
+    
 
     function Checkin() {
         setOption('checkin')
@@ -67,12 +69,24 @@ export const Page = () => {
                     <ScanArea classList={classList} attendance={attendance} setAttendance={setAttendance} option={option} setOption={setOption} setVisibility={setVisibility} />
                     <Table attendance={attendance} />
 
-                    {/* popup box */}
+                    {/* option popup box */}
                     {
                         visibility === true ?
                             <Popup Signin={Checkin} Signout={Checkout} ClosePopup={ClosePopup} />
+                            // <SuccessPopup ClosePopup={ClosePopup}/>
                             :
                             ''
+                    }
+
+                    {/* card validity popup box */}
+                    {
+                        cardValidity === false?
+                            <InvalidCardPopup ClosePopup={ClosePopup} setCardvalidity={setCardvalidity}/>
+                            :
+                            cardValidity === true?
+                                <SuccessPopup ClosePopup={ClosePopup} setCardvalidity={setCardvalidity}/>
+                                :
+                                ''
                     }
                 </div>
             </div>
