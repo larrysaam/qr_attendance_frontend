@@ -29,7 +29,7 @@ export const Attendance = () => {
 
     useEffect(() => {
         // Fetch attendance data from the backend
-        axios.get(`${Backend_URL}/attendance/v1`) // Replace with your backend URL
+        axios.get(`${Backend_URL}/attendance/v2/today`) // Replace with your backend URL
             .then(response => {
                 setAttendance(response.data); // Store the retrieved data in attendance state
             })
