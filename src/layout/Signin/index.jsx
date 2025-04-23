@@ -47,11 +47,10 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
         );
     };
 
-    // Helper function: Update attendance on the server
+    // Helper function: Update attendance on the server (checkin or checkout)
     const updateAttendanceOnServer = (name, currentTime) => {
         axios.put(`${Backend_URL}/attendance/v1/${option}`, {
             studentname: name,
-            [option]: currentTime,
         })
         .then(() => {
             alert(`${name} has been ${option} at ${currentTime}`);
@@ -75,8 +74,7 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
     const addNewAttendanceOnServer = (student, currentTime) => {
         axios.post(`${Backend_URL}/attendance/v1`, {
             studentname: student.name,
-            checkin: option === 'checkin' ? currentTime : 'N/A',
-            checkout: option === 'checkout' ? currentTime : 'N/A',
+            option
         })
         .then(() => {
             alert(`${student.name} has been ${option} at ${currentTime}`);
