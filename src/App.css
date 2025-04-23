@@ -1,6 +1,9 @@
 .App {
   text-align: center;
   overflow: hidden;
+  display: flex;
+  flex-direction: row; /* Default layout for larger screens */
+
 }
 
 .App-logo {
@@ -35,5 +38,13 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .App {
+      flex-direction: column; /* Change to column layout for smaller screens */
   }
 }

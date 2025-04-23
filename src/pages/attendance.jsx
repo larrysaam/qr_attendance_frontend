@@ -2,12 +2,11 @@ import './index.css'
 import { ScanArea } from '../layout/Signin'
 import { useEffect, useState } from 'react'
 import Table from '../components/table'
-import Sidebar from '../layout/Sidebar'
 import { InvalidCardPopup, Popup, SuccessPopup } from '../layout/popup/popup'
 import axios from 'axios'
 import { Backend_URL } from '../utils/api'
 
-export const Page = () => {
+export const Attendance = () => {
 
     const [option, setOption] = useState(null)
     const [visibility, setVisibility] = useState(false)
@@ -61,8 +60,6 @@ export const Page = () => {
 
     return (
         <div style={{ display: 'flex' }} className="page_attendance">
-            <Sidebar />
-            
             <div className='content_area'>
                 <h1>Attendance</h1>
                 <div className='inner_content_area'>
