@@ -9,7 +9,7 @@ export const UserList = () => {
     const [users, setUsers] = useState([]);
     const [newUserName, setNewUserName] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const usersPerPage = 15;
+    const usersPerPage = 5;
 
     // Fetch user list from the server
     useEffect(() => {
