@@ -1,46 +1,63 @@
 .sidebar {
-    width: 15%;
+    width: 250px;
+    background-color: #f4f4f4;
     height: 100vh;
-    background-color: #4CAF50;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0;
-    box-shadow: 2px 0 5px rgba(135, 116, 116, 0.1);
-    flex-shrink: 0;
-    overflow-y: scroll;
+    background-color: rgb(0, 153, 255);
+    padding: 20px;
 }
 
+
+
 .logo-container {
-    margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .logo {
-    width: 120px;
+    width: 100px;
     height: auto;
-    border-radius: 50%;
 }
 
 .button-container {
-    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .attendance-button {
-    background-color: #ffffff;
-    color: #4CAF50;
+    padding: 10px 15px;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
     border-radius: 5px;
+    background: none;
+    color: #333;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .attendance-button:hover {
-    background-color: #4CAF50;
-    color: #ffffff;
+    background-color: white;
 }
+
+
+.attendance-button.active {
+    background-color: white;
+    color: rgb(0, 153, 255);
+}
+
+.attendance-button.active .navbarIcon {
+    color: rgb(0, 153, 255); /* Change icon color when active */
+}
+
+.navbarIcon{
+    width: 25px;
+    height: 25px;
+    color: white;
+}
+
 
 
 
@@ -51,9 +68,16 @@
         height: auto; /* Adjust height to fit content */
         position: fixed; /* Fix the sidebar to the bottom */
         bottom: 0; /* Align to the bottom of the page */
-        flex-direction: row; /* Arrange items in a row */
+        display: flex;
+        flex-direction: row; /* Arrange items in a single row */
         justify-content: space-around; /* Space items evenly */
         padding: 10px 0; /* Adjust padding for mobile */
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: row; /* Arrange buttons in a row */
+        gap: 10px;
     }
 
     .logo-container {
@@ -63,5 +87,11 @@
     .attendance-button {
         padding: 8px 12px; /* Adjust button size for mobile */
         font-size: 14px; /* Adjust font size for mobile */
+        flex-direction: column; /* Stack icon and text vertically */
+        align-items: center; /* Center align icon and text */
+    }
+
+    .attendance-button span {
+        display: none; /* Hide the text beside the icon */
     }
 }
