@@ -61,7 +61,7 @@ export const Attendance = () => {
     return (
         <div style={{ display: 'flex' }} className="page_attendance">
             <div className='content_area'>
-                <h1>Attendance</h1>
+                <h1>Today's Attendance</h1>
                 <div className='inner_content_area'>
                     <ScanArea classList={classList} attendance={attendance} setAttendance={setAttendance} option={option} setOption={setOption} setVisibility={setVisibility} />
                     <Table attendance={attendance} />
