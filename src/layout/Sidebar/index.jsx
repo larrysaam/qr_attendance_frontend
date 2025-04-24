@@ -26,7 +26,7 @@ const Sidebar = () => {
             <div className="logo-container">
                 <img 
                     src="/path/to/logo.png" 
-                    alt="School Logo" 
+                    alt="Company Logo" 
                     className="logo" 
                 />
             </div>

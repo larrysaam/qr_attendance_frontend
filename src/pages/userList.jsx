@@ -29,6 +29,7 @@ export const UserList = () => {
             return;
         }
 
+        
         axios.put(`${Backend_URL}/attendance/classlist`, { name: newUserName })
             .then(() => {
                 alert('User added successfully');

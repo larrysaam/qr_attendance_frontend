@@ -1,9 +1,11 @@
 .content_area {
     width: 85%;
+    height: 100%;
 }
 
 .inner_content_area {
     width: 100%;
+    height: 100%;
     padding: 20px;
     overflow-y: scroll;
     display: flex;

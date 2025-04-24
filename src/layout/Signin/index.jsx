@@ -16,6 +16,9 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
         if (results.startsWith('@')) {
             return results.slice(1); // Extract the name after '@'
         }
+
+        alert(results)
+        setCardvalidity(false);
         return null;
     };
 
@@ -105,6 +108,8 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
             setCardvalidity(false);
         }
 
+        setOption(true)
+
         // Reopen the scanner
         scanner.render(success, error);
     };
@@ -117,15 +122,27 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
     // Initialize the scanner
     useEffect(() => {
         if (option === null) return;
+
+        const readerElement = document.getElementById('reader');
+        if (!readerElement) {
+            console.error('Scanner container not found');
+            return;
+        }
+
         scanner = new Html5QrcodeScanner('reader', {
             qrbox: {
                 width: 300,
                 height: 200,
             },
             fps: 5,
+            disableFlip: true,
         });
 
         scanner.render(success, error);
+
+        return () => {
+            scanner.clear(); // Clean up the scanner on unmount
+        };
     }, [option]);
 
     const ShowPopup = () => {

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Signinbutton, Signoutbutton } from '../../components/buttons'
+import { IoMdCloudDone } from "react-icons/io";
 import './index.css'
 
 export const Popup = ({Signin, Signout, ClosePopup})=>{
@@ -77,7 +78,7 @@ export const SuccessPopup = ({ ClosePopup, setCardvalidity }) => {
                         X
                     </button>
                 </div>
-                <h2>Done</h2>
+                <h2>Done </h2>
             </div>
         </div>
     );

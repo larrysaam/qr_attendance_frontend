@@ -63,7 +63,7 @@ export const Attendance = () => {
             <div className='content_area'>
                 <h1>Today's Attendance</h1>
                 <div className='inner_content_area'>
-                    <ScanArea classList={classList} attendance={attendance} setAttendance={setAttendance} option={option} setOption={setOption} setVisibility={setVisibility} />
+                    <ScanArea classList={classList} attendance={attendance} setAttendance={setAttendance} option={option} setOption={setOption} setVisibility={setVisibility} setCardvalidity={setCardvalidity}/>
                     <Table attendance={attendance} />
 
                     {/* option popup box */}
