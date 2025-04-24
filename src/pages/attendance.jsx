@@ -6,14 +6,15 @@ import { InvalidCardPopup, Popup, SuccessPopup } from '../layout/popup/popup'
 import axios from 'axios'
 import { Backend_URL } from '../utils/api'
 
-export const Attendance = () => {
 
-    const [option, setOption] = useState(null)
-    const [visibility, setVisibility] = useState(false)
-    const [cardValidity, setCardvalidity] = useState(null)
+
+export const Attendance = () => {
+    const [option, setOption] = useState(null);
+    const [visibility, setVisibility] = useState(false);
+    const [cardValidity, setCardvalidity] = useState(null);
     const [attendance, setAttendance] = useState([]);
     const [classList, setClassList] = useState([]);
-
+    const [loading, setLoading] = useState(true); // Add loading state
 
     // Fetch classlist data from the backend
     useEffect(() => {
@@ -26,67 +27,72 @@ export const Attendance = () => {
             });
     }, []);
 
-
     useEffect(() => {
         // Fetch attendance data from the backend
+        setLoading(true); // Set loading to true before fetching
         axios.get(`${Backend_URL}/attendance/v2/today`) // Replace with your backend URL
             .then(response => {
                 setAttendance(response.data); // Store the retrieved data in attendance state
+                setLoading(false); // Set loading to false after data is fetched
             })
             .catch(error => {
                 console.error('Error fetching attendance:', error);
+                setLoading(false); // Set loading to false even if there's an error
             });
     }, []);
 
-    
-
     function Checkin() {
-        setOption('checkin')
-        setVisibility(false)
+        setOption('checkin');
+        setVisibility(false);
     }
 
     function Checkout() {
-        setOption('checkout')
-        setVisibility(false)
+        setOption('checkout');
+        setVisibility(false);
     }
 
     function ClosePopup() {
-        setOption(null)
-        setVisibility(false)
+        setOption(null);
+        setVisibility(false);
     }
-
-
-    
 
     return (
         <div style={{ display: 'flex' }} className="page_attendance">
             <div className='content_area'>
                 <h1>Today's Attendance</h1>
                 <div className='inner_content_area'>
-                    <ScanArea classList={classList} attendance={attendance} setAttendance={setAttendance} option={option} setOption={setOption} setVisibility={setVisibility} setCardvalidity={setCardvalidity}/>
-                    <Table attendance={attendance} />
+                    <ScanArea
+                        classList={classList}
+                        attendance={attendance}
+                        setAttendance={setAttendance}
+                        option={option}
+                        setOption={setOption}
+                        setVisibility={setVisibility}
+                        setCardvalidity={setCardvalidity}
+                    />
+                    {loading ? ( // Show loading text while data is being fetched
+                        <p>Loading attendance data...</p>
+                    ) : (
+                        <Table attendance={attendance} />
+                    )}
 
                     {/* option popup box */}
-                    {
-                        visibility === true ?
-                            <Popup Signin={Checkin} Signout={Checkout} ClosePopup={ClosePopup} />
-                            // <SuccessPopup ClosePopup={ClosePopup}/>
-                            :
-                            ''
-                    }
+                    {visibility === true ? (
+                        <Popup Signin={Checkin} Signout={Checkout} ClosePopup={ClosePopup} />
+                    ) : (
+                        ''
+                    )}
 
                     {/* card validity popup box */}
-                    {
-                        cardValidity === false?
-                            <InvalidCardPopup ClosePopup={ClosePopup} setCardvalidity={setCardvalidity}/>
-                            :
-                            cardValidity === true?
-                                <SuccessPopup ClosePopup={ClosePopup} setCardvalidity={setCardvalidity}/>
-                                :
-                                ''
-                    }
+                    {cardValidity === false ? (
+                        <InvalidCardPopup ClosePopup={ClosePopup} setCardvalidity={setCardvalidity} />
+                    ) : cardValidity === true ? (
+                        <SuccessPopup ClosePopup={ClosePopup} setCardvalidity={setCardvalidity} />
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
