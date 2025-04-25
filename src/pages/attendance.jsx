@@ -42,60 +42,13 @@ export const Attendance = () => {
             });
     }, []);
 
-    // Sync offline attendance with the server when online
-    useEffect(() => {
-        const syncOfflineAttendance = () => {
-            const storedAttendance = JSON.parse(localStorage.getItem('offlineAttendance')) || [];
-            if (storedAttendance.length > 0) {
-                storedAttendance.forEach(record => {
-                    axios.post(`${Backend_URL}/attendance/v1`, record)
-                        .then(() => {
-                            console.log('Offline record synced:', record);
-                        })
-                        .catch(error => {
-                            console.error('Error syncing offline record:', error);
-                        });
-                });
-                localStorage.removeItem('offlineAttendance'); // Clear offline records after syncing
-            }
-        };
-
-        window.addEventListener('online', syncOfflineAttendance);
-
-        return () => {
-            window.removeEventListener('online', syncOfflineAttendance);
-        };
-    }, []);
-
-    const handleAttendance = (record) => {
-        if (navigator.onLine) {
-            // If online, send the record to the server
-            axios.post(`${Backend_URL}/attendance/v1`, record)
-                .then(() => {
-                    console.log('Record added successfully:', record);
-                })
-                .catch(error => {
-                    console.error('Error adding record:', error);
-                });
-        } else {
-            // If offline, store the record locally
-            const storedAttendance = JSON.parse(localStorage.getItem('offlineAttendance')) || [];
-            storedAttendance.push(record);
-            localStorage.setItem('offlineAttendance', JSON.stringify(storedAttendance));
-            console.log('Record stored offline:', record);
-        }
-    };
-
     function Checkin() {
-        const record = { studentname: 'John Doe', option: 'checkin' }; // Example record
-        handleAttendance(record);
         setOption('checkin');
         setVisibility(false);
     }
 
     function Checkout() {
-        const record = { studentname: 'John Doe', option: 'checkout' }; // Example record
-        handleAttendance(record);
+        
         setOption('checkout');
         setVisibility(false);
     }

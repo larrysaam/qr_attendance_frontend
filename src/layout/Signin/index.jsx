@@ -11,13 +11,38 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
     var scanner = null; // Declare scanner variable outside useEffect to avoid reinitialization
     const [scanResults, setScanResults] = useState([]);
 
+    // Sync offline attendance with the server when online
+    useEffect(() => {
+        const syncOfflineAttendance = () => {
+            const storedAttendance = JSON.parse(localStorage.getItem('offlineAttendance')) || [];
+            if (storedAttendance.length > 0) {
+                storedAttendance.forEach(record => {
+                    axios.post(`${Backend_URL}/attendance/v1`, record)
+                        .then(() => {
+                            console.log('Offline record synced:', record);
+                        })
+                        .catch(error => {
+                            console.error('Error syncing offline record:', error);
+                        });
+                });
+                localStorage.removeItem('offlineAttendance'); // Clear offline records after syncing
+            }
+        };
+
+        window.addEventListener('online', syncOfflineAttendance);
+
+        return () => {
+            window.removeEventListener('online', syncOfflineAttendance);
+        };
+    }, []);
+
     // Helper function: Validate QR code format
     const validateQRCode = (results) => {
         if (results.startsWith('@')) {
             return results.slice(1); // Extract the name after '@'
         }
 
-        alert(results)
+        alert(results);
         setCardvalidity(false);
         return null;
     };
@@ -30,10 +55,10 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
 
         if (attendie) {
             updateAttendanceLocally(name, currentTime);
-            updateAttendanceOnServer(name, currentTime);
+            updateAttendance(name, currentTime);
         } else {
             addNewAttendanceLocally(student, currentTime);
-            addNewAttendanceOnServer(student, currentTime);
+            addNewAttendance(student, currentTime);
         }
 
         setCardvalidity(true);
@@ -50,18 +75,27 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
         );
     };
 
-    // Helper function: Update attendance on the server (checkin or checkout)
-    const updateAttendanceOnServer = (name, currentTime) => {
-        axios.put(`${Backend_URL}/attendance/v1/${option}`, {
-            studentname: name,
-        })
-        .then(() => {
-            alert(`${name} has been ${option} at ${currentTime}`);
-        })
-        .catch(error => {
-            console.error('Error updating attendance on the server:', error);
-            alert('Failed to update the server. Please try again.');
-        });
+    // Helper function: Update attendance (online or offline)
+    const updateAttendance = (name, currentTime) => {
+        if (navigator.onLine) {
+            // If online, update the server
+            axios.put(`${Backend_URL}/attendance/v1/${option}`, {
+                studentname: name,
+            })
+            .then(() => {
+                alert(`${name} has been ${option} at ${currentTime}`);
+            })
+            .catch(error => {
+                console.error('Error updating attendance on the server:', error);
+                alert('Failed to update the server. Please try again.');
+            });
+        } else {
+            // If offline, store the record locally
+            const storedAttendance = JSON.parse(localStorage.getItem('offlineAttendance')) || [];
+            storedAttendance.push({ studentname: name, option });
+            localStorage.setItem('offlineAttendance', JSON.stringify(storedAttendance));
+            console.log('Record stored offline:', { studentname: name, option });
+        }
     };
 
     // Helper function: Add new attendance locally
@@ -73,19 +107,28 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
         setAttendance(prevAttendance => [...prevAttendance, newEntry]);
     };
 
-    // Helper function: Add new attendance on the server
-    const addNewAttendanceOnServer = (student, currentTime) => {
-        axios.post(`${Backend_URL}/attendance/v1`, {
-            studentname: student.name,
-            option
-        })
-        .then(() => {
-            alert(`${student.name} has been ${option} at ${currentTime}`);
-        })
-        .catch(error => {
-            console.error('Error adding attendance to the server:', error);
-            alert('Failed to update the server. Please try again.');
-        });
+    // Helper function: Add new attendance (online or offline)
+    const addNewAttendance = (student, currentTime) => {
+        if (navigator.onLine) {
+            // If online, add to the server
+            axios.post(`${Backend_URL}/attendance/v1`, {
+                studentname: student.name,
+                option
+            })
+            .then(() => {
+                alert(`${student.name} has been ${option} at ${currentTime}`);
+            })
+            .catch(error => {
+                console.error('Error adding attendance to the server:', error);
+                alert('Failed to update the server. Please try again.');
+            });
+        } else {
+            // If offline, store the record locally
+            const storedAttendance = JSON.parse(localStorage.getItem('offlineAttendance')) || [];
+            storedAttendance.push({ studentname: student.name, option });
+            localStorage.setItem('offlineAttendance', JSON.stringify(storedAttendance));
+            console.log('Record stored offline:', { studentname: student.name, option });
+        }
     };
 
     // Main success function
@@ -108,7 +151,7 @@ export const ScanArea = ({ option, setOption, classList, attendance, setAttendan
             setCardvalidity(false);
         }
 
-        setOption(true)
+        setOption(true);
 
         // Reopen the scanner
         scanner.render(success, error);

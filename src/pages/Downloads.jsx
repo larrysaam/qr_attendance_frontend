@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import jsPDF from 'jspdf'; // Import jsPDF
+import 'jspdf-autotable'; // Import autotable plugin for table generation
 import './downloads.css';
 import { Backend_URL } from '../utils/api';
 
@@ -11,7 +13,6 @@ export const Downloads = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15;
 
-    
     const fetchAttendance = () => {
         if (!year || !month || !day) {
             alert('Please select year, month, and day.');
@@ -19,20 +20,52 @@ export const Downloads = () => {
         }
 
         const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        const fileName = `${formattedDate}.csv`;
 
-        axios.get(`${Backend_URL}/attendance/v1/${fileName}`)
+        axios.get(`${Backend_URL}/attendance/v1/${formattedDate}`)
             .then(response => {
                 setAttendanceData(response.data);
                 setCurrentPage(1); // Reset to the first page when new data is fetched
             })
             .catch(error => {
                 console.error('Error fetching file:', error);
-                alert(`File ${fileName} does not exist.`);
+                alert(`File ${formattedDate} does not exist.`);
                 setAttendanceData([]);
             });
     };
 
+    const downloadPDF = () => {
+        if (attendanceData.length === 0) {
+            alert('No attendance data available to download.');
+            return;
+        }
+    
+        const doc = new jsPDF();
+    
+        // Add title
+        doc.setFontSize(16);
+        doc.text(`Attendance Data for ${year}-${month}-${day}`, 10, 10);
+    
+        // Add table headers
+        const headers = ['Name', 'Check-in', 'Check-out'];
+        let startY = 20; // Starting Y position for the table
+        doc.setFontSize(12);
+        doc.text(headers[0], 10, startY);
+        doc.text(headers[1], 70, startY);
+        doc.text(headers[2], 130, startY);
+    
+        // Add table rows
+        attendanceData.forEach((row, index) => {
+            const rowY = startY + 10 + index * 10; // Calculate Y position for each row
+            doc.text(row.name, 10, rowY);
+            doc.text(row.checkin, 70, rowY);
+            doc.text(row.checkout, 130, rowY);
+        });
+    
+        // Save the PDF
+        doc.save(`Attendance_${year}-${month}-${day}.pdf`);
+    };
+
+    
     // Pagination logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -62,6 +95,7 @@ export const Downloads = () => {
                     ))}
                 </select>
                 <button onClick={fetchAttendance}>Fetch Attendance</button>
+                <button onClick={downloadPDF}>Download as PDF</button> {/* New button */}
             </div>
 
             {attendanceData.length === 0 && (
