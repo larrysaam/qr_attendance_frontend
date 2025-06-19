@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaUsers, FaDownload } from "react-icons/fa"; // Or appropriate icons
 import './Sidebar/index.css'; // Reusing the existing sidebar CSS for now
@@ -7,23 +7,24 @@ const AdminSidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Determine active button based on current path
-    const getActiveButton = () => {
-        if (location.pathname.includes('/admin/')) {
-            return 'userlist';
-        }
-        if (location.pathname.includes('/admin/downloads')) {
-            return 'downloads';
-        }
-        return null; // Or a default active button for /admin index
-    };
+    const [activeButton, setActiveButton] = useState(null);
 
-    const [activeButton, setActiveButton] = useState(getActiveButton());
+    useEffect(() => {
+        const { pathname } = location;
+        if (pathname === '/admin/downloads') {
+            setActiveButton('downloads');
+        } else if (pathname === '/admin' || pathname === '/admin/' || pathname.startsWith('/admin/userlist')) {
+            // UserList is the home page for /admin and also accessible via /admin/userlist
+            setActiveButton('userlist');
+        } else {
+            setActiveButton(null); // No specific button active or handle other admin routes
+        }
+    }, [location.pathname]);
 
     const handleButtonClick = (buttonName) => {
-        setActiveButton(buttonName);
+        // setActiveButton will be updated by the useEffect hook upon navigation
         if (buttonName === 'userlist') {
-            navigate('/admin/userlist');
+            navigate('/admin'); // User list is the home page for admin
         } else if (buttonName === 'downloads') {
             navigate('/admin/downloads');
         }

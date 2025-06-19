@@ -14,12 +14,12 @@ const Sidebar = () => {
         if (buttonName === 'attendance') {
             nav('/'); 
         }
-        // else if (buttonName === 'downloads') { // Route moved to AdminLayout
-        //     nav('/admin/downloads'); 
-        // }
-        // else if (buttonName === 'userEdit') { // Route moved to AdminLayout
-        //     nav('/admin/userlist'); 
-        // }   
+        else if (buttonName === 'downloads') { // Route moved to AdminLayout
+            nav('/admin/downloads'); 
+        }
+        else if (buttonName === 'userEdit') { // Route moved to AdminLayout
+            nav('/admin/'); 
+        }   
     };
 
     return (
