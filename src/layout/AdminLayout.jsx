@@ -3,11 +3,12 @@ import { Outlet, Routes, Route } from 'react-router-dom';
 import { UserList } from '../pages/userList';
 import { Downloads } from '../pages/Downloads';
 import AdminSidebar from './AdminSidebar'; // Import the AdminSidebar
+import './AdminLayout.css'; // Import the new CSS file
 
 const AdminLayout = () => {
   return (
     <div className="admin-layout">
-      <AdminSidebar /> {/* Use the AdminSidebar */}
+      {/* AdminSidebar uses the .sidebar class which is styled in Sidebar/index.css and potentially AdminLayout.css */}
       <div className="admin-content">
         {/* If AdminLayout defines its own routes, Outlet might not be needed here,
             but if App.js defines nested routes for /admin, then Outlet is correct.
