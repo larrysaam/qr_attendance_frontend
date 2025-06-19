@@ -13,12 +13,13 @@ const Sidebar = () => {
         setActiveButton(buttonName);
         if (buttonName === 'attendance') {
             nav('/'); 
-        }else if (buttonName === 'downloads') {
-            nav('/Downloads'); 
         }
-        else if (buttonName === 'userEdit') {
-            nav('/UserList'); 
-        }   
+        // else if (buttonName === 'downloads') { // Route moved to AdminLayout
+        //     nav('/admin/downloads'); 
+        // }
+        // else if (buttonName === 'userEdit') { // Route moved to AdminLayout
+        //     nav('/admin/userlist'); 
+        // }   
     };
 
     return (
@@ -36,18 +37,6 @@ const Sidebar = () => {
                     onClick={() => handleButtonClick('attendance')}
                 >
                     <BsTextParagraph className='navbarIcon' /> <span>Attendance</span>
-                </button>
-                <button
-                    className={`attendance-button ${activeButton === 'downloads' ? 'active' : ''}`}
-                    onClick={() => handleButtonClick('downloads')}
-                >
-                    <FaDownload className='navbarIcon' /> <span>Downloads</span>
-                </button>
-                <button
-                    className={`attendance-button ${activeButton === 'userEdit' ? 'active' : ''}`}
-                    onClick={() => handleButtonClick('userEdit')}
-                >
-                    <FaUserEdit className='navbarIcon' /> <span>Employee</span>
                 </button>
             </div>
         </div>

@@ -2,6 +2,7 @@
     width: 80%;
     margin: 0 auto;
     text-align: center;
+    padding: 0px 100px;
 }
 
 .top-bar {
@@ -69,18 +70,19 @@
 /* Responsive design for mobile devices */
 @media (max-width: 768px) {
     .downloads-container {
-        width: 90%; /* Adjust width for smaller screens */
-        margin: 0 auto;
-        text-align: center;
+        width: 100%; /* Use full width on mobile */
+        padding: 0 20px; /* Reduced horizontal padding, added a smaller 20px gutter */
+        box-sizing: border-box; /* Ensure padding is included in the 100% width */
+        /* text-align: center; is inherited from the desktop rule and still applies */
     }
     
     .top-bar {
-        margin-bottom: 20px;
-        margin-top: 60px;
+        margin-bottom: 15px; /* Reduced bottom margin */
+        margin-top: 20px;    /* Significantly reduced top margin */
         display: flex;
         flex-wrap: wrap; /* Allow wrapping for smaller screens */
         justify-content: center; /* Center align for mobile */
-        gap: 10px;
+        gap: 8px; /* Reduced gap between items */
     }
     
     .top-bar select, .top-bar button {
@@ -168,25 +170,21 @@
         color: #333;
     }
 
-
-
-
-    
     /* Media query for mobile devices */
-    @media (max-width: 768px) {
-        .top-bar {
-            flex-direction: column; /* Stack elements vertically */
-            align-items: center; /* Center align for mobile */
-        }
-    
-        .top-bar select, .top-bar button {
-            width: 100%; /* Full width for mobile */
-            max-width: none; /* Remove max-width for mobile */
-        }
-    
-        .attendance-table th, .attendance-table td {
-            font-size: 12px; /* Smaller font size for mobile */
-            padding: 6px; /* Reduce padding for smaller screens */
-        }
+    /* Rules from the previously nested media query are now un-nested. */
+    /* These will correctly override or add to the .top-bar and .attendance-table styles defined above within this media query. */
+    .top-bar {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center align for mobile */
+    }
+
+    .top-bar select, .top-bar button {
+        /* width: 100%; is already set by a previous rule in this media query. */
+        max-width: none; /* This overrides max-width: 200px; ensuring full width. */
+    }
+
+    .attendance-table th, .attendance-table td {
+        font-size: 12px; /* Smaller font size for mobile */
+        padding: 6px; /* Further reduce padding for smaller screens */
     }
 }

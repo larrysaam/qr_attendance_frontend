@@ -2,21 +2,20 @@ import './App.css';
 import { Attendance } from './pages/attendance';
 import { Route, Routes } from 'react-router-dom';
 import Sidebar from './layout/Sidebar'
-import { UserList } from './pages/userList';
-import { Downloads } from './pages/Downloads';
+import AdminLayout from './layout/AdminLayout'; // Import the new AdminLayout
 
 function App() {
   return (
     <div className="App">
         <Sidebar />
         <Routes>
-          <Route path='/' element={<Attendance/>}/>
-          <Route path='/UserList' element={<UserList/>}/>
-          <Route path='/Downloads' element={<Downloads/>}/>
+          {/* User-facing route */}
+          <Route path='/' element={<Attendance />} />
+          {/* Admin routes */}
+          <Route path='/admin/*' element={<AdminLayout />} />
         </Routes>
     </div>
   );
 }
 
 export default App;
-

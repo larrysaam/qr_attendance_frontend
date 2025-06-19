@@ -2,6 +2,7 @@
     width: 80%;
     margin: 0 auto;
     text-align: center;
+    padding: 0px 100px; /* Desktop padding */
 }
 
 .user-list-container h1{
@@ -130,3 +131,11 @@
     opacity: 0.5;
 }
 
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+    .user-list-container {
+        width: 100%; /* Use full width on mobile */
+        padding: 0 20px; /* Remove large horizontal padding, add a smaller 20px gutter */
+        box-sizing: border-box; /* Ensure padding is included in the 100% width */
+    }
+}
