@@ -24,7 +24,7 @@ const Sidebar = () => {
         else if (buttonName === 'downloads') { // Route moved to AdminLayout
             nav('/admin/downloads'); 
         }
-        else if (buttonName === 'userEdit') { // Route moved to AdminLayout
+        else if (buttonName === 'userlist') { // Route moved to AdminLayout
             nav('/admin/'); 
         }   
     };
